@@ -35,11 +35,20 @@ const fetchData = () => {
         // Check if the iteration is over
         // Run amimation if so
         if (dataArr.length === dataArr.indexOf(customData) + 1) {
-          document.querySelector("#startButton").addEventListener("click", () => {
-            document.querySelector(".containers").style.display = "none"
-              document.querySelector(".start-button").style.display = "none"
-            animationTimeline()
-          }
+            document.querySelector("#startButton").addEventListener("click", () => {
+                document.querySelector(".containers").style.display = "none"
+                document.querySelector(".start-button").style.display = "none"
+
+                animationTimeline()
+
+                // 在动画结束后3秒显示链接
+                setTimeout(() => {
+                  const githubLink = document.querySelector('.github-link');
+                  githubLink.style.display = 'block';
+                  setTimeout(() => githubLink.classList.add('show'), 50);
+                }, 3000); // 3秒延迟
+
+            }
           )
           // animationTimeline()
         }

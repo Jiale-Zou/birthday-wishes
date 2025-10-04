@@ -393,32 +393,12 @@ body {
     }
 }
 
+
 /* 礼物堆样式 */
-.gifts-leftbottom {
-  position: fixed;
-  left: 5%;
-  bottom: 10%;
-  display: flex;
-  flex-wrap: wrap;
-  width: 150px;
-  opacity: 0;
-  transform: translateY(100px);
-  transition: all 1s ease-out;
-  z-index: 1000;
-}
-
-.gift {
-    position: relative;
-    font-size: 40px;
-    margin: 5px;
-    animation: float 3s ease-in-out infinite;
-}
-
-/* 气球堆样式 */
 .balloons-righttop {
   position: fixed;
-  right: 5%;
-  top: 20%;
+  left: 20%;
+  top: 40%;
   display: flex;
   flex-wrap: wrap;
   width: 180px;
@@ -816,3 +796,56 @@ canvas {
     background-repeat: no-repeat;
 }
 
+/* 图片集链接 */
+.github-link {
+    position: fixed;
+    bottom: 160px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    padding: 15px;
+    opacity: 0;
+    transition: all 0.5s ease;
+    z-index: 100;
+    /* 新增关键属性 */
+    display: flex;
+    justify-content: center;
+    pointer-events: none; /* 初始不可点击 */
+}
+
+.github-link.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0); /* 保持水平居中，取消垂直偏移 */
+    pointer-events: auto; /* 显示后可点击 */
+}
+
+.github-link a {
+  color: #0366d6;
+  text-decoration: none;
+  font-size: 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 30px;
+  background: rgba(3, 102, 214, 0.1);
+  transition: all 0.3s;
+}
+
+.github-link a:hover {
+  background: rgba(3, 102, 214, 0.2);
+  transform: scale(1.05);
+}
+
+/* 适配移动端 */
+@media (max-width: 768px) {
+    .github-link {
+    padding: 10px;
+    bottom: 10px;
+    }
+    .github-link a {
+    font-size: 1rem;
+    padding: 10px 20px;
+    max-width: 95%; /* 小屏幕更宽限制 */
+    }
+}
