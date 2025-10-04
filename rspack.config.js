@@ -1,3 +1,21 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:db49a76974a8283cc67ac408e02a5a0360c05fcfed6b6fb1c753c644de9c9a06
-size 324
+module.exports = {
+  context: __dirname,
+  entry: './script/main.js',
+  devServer: {
+    port: 1113,
+    open: true,
+    hot: true,
+    static: {
+      directory: './'
+    }
+  },
+  output: {
+    clean: true
+  },
+  builtins: {
+    html: [{
+      template: './index.html',
+      inject: true
+    }]
+  }
+}

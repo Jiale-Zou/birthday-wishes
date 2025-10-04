@@ -1,3 +1,17 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:ec039fa5cdf4221f988681ffb8bb7ecf416c0e1e4bc2c880888f97e6fe38917d
-size 433
+{
+  "name": "happy-birthday",
+  "version": "2.0.0",
+  "description": "An app that let's you say happy birthday to your friend in a nerdy way.",
+  "scripts": {
+    "dev": "rspack serve",
+    "build": "rspack build",
+    "serve": "rspack serve"
+  },
+  "devDependencies": {
+    "@rspack/cli": "^0.5.0",
+    "@rspack/core": "^0.5.0",
+    "@rspack/plugin-html": "^0.5.0"
+  },
+  "author": "Tsingper",
+  "license": "MIT"
+}
