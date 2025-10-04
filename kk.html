@@ -25,13 +25,18 @@
 
         <!-- 点击许愿后弹出礼物标识 -->
         <!-- 右侧礼物堆 -->
-        <div class="balloons-righttop">
-            <div class="balloon">✨</div>
-            <div class="balloon">🎂</div>
-            <div class="balloon">🎊</div>
-            <div class="balloon">🥳</div>
-        </div>
+<!--        <div class="balloons-righttop">-->
+<!--            <div class="balloon">✨</div>-->
+<!--            <div class="balloon">🎂</div>-->
+<!--            <div class="balloon">🎊</div>-->
+<!--            <div class="balloon">🥳</div>-->
+<!--        </div>-->
 
+        <!-- 日历 -->
+        <div class="calendar-card">
+            <div class="calendar-header">10月</div>
+            <div class="calendar-day">28</div>
+        </div>
 
         <!-- 照片框 -->
         <div class="photo-frame">
@@ -313,19 +318,19 @@
                 wishMessage.classList.add('wish-come-true'); // 添加闪烁样式
             }, 2000);
 
-            // 显示礼物和气球
-            setTimeout(() => {
-                const balloons = document.querySelector('.balloons-righttop');
-
-                if (balloons) {
-                    balloons.classList.add('show-gifts');
-
-                    // 为每个礼物和气球添加随机延迟动画
-                    document.querySelectorAll('.balloon').forEach((balloon, i) => {
-                        balloon.style.animationDelay = `${i * 0.3}s`;
-                    });
-                }
-            }, 1500); // 比祝福语稍早出现
+            // // 显示礼物和气球
+            // setTimeout(() => {
+            //     const balloons = document.querySelector('.balloons-righttop');
+            //
+            //     if (balloons) {
+            //         balloons.classList.add('show-gifts');
+            //
+            //         // 为每个礼物和气球添加随机延迟动画
+            //         document.querySelectorAll('.balloon').forEach((balloon, i) => {
+            //             balloon.style.animationDelay = `${i * 0.3}s`;
+            //         });
+            //     }
+            // }, 1500); // 比祝福语稍早出现
         });
 
         // 点击页面任意位置创建简约烟花
