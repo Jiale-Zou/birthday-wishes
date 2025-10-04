@@ -24,15 +24,7 @@
         </div>
 
         <!-- 点击许愿后弹出礼物标识 -->
-        <!-- 左侧礼物堆 -->
-        <div class="gifts-leftbottom">
-            <div class="gift">🎁</div>
-            <div class="gift">💝</div>
-            <div class="gift">🎉</div>
-            <div class="gift">🎈</div>
-        </div>
-
-        <!-- 右侧气球堆 -->
+        <!-- 右侧礼物堆 -->
         <div class="balloons-righttop">
             <div class="balloon">✨</div>
             <div class="balloon">🎂</div>
@@ -40,13 +32,6 @@
             <div class="balloon">🥳</div>
         </div>
 
-        <!-- 左侧气球堆 -->
-        <div class="music-lefttop">
-            <div class="music">🎵</div>
-            <div class="music">🎶</div>
-            <div class="music">🎶</div>
-            <div class="music">🎵</div>
-        </div>
 
         <!-- 照片框 -->
         <div class="photo-frame">
@@ -234,6 +219,13 @@
     </div>
     <canvas id="fireworksCanvas"></canvas>
   </div>
+
+    <!-- 图片集链接 -->
+    <div class="github-link" style="display: none;">
+      <a href="https://github.com/Jiale-Zou/birthday-wishes/Album.html" target="_blank">
+        <i class="fab fa-github"></i> 我建的一个在线图片集，都是些风景照
+      </a>
+    </div>
 </body>
 
 <script>
@@ -323,26 +315,14 @@
 
             // 显示礼物和气球
             setTimeout(() => {
-                const gifts = document.querySelector('.gifts-leftbottom');
                 const balloons = document.querySelector('.balloons-righttop');
-                const music = document.querySelector('.music-lefttop');
 
-                if (gifts && balloons) {
-                    gifts.classList.add('show-gifts');
+                if (balloons) {
                     balloons.classList.add('show-gifts');
-                    music.classList.add('show-gifts');
 
                     // 为每个礼物和气球添加随机延迟动画
-                    document.querySelectorAll('.gift').forEach((gift, i) => {
-                        gift.style.animationDelay = `${i * 0.2}s`;
-                    });
-
                     document.querySelectorAll('.balloon').forEach((balloon, i) => {
                         balloon.style.animationDelay = `${i * 0.3}s`;
-                    });
-
-                    document.querySelectorAll('.music').forEach((music, i) => {
-                        music.style.animationDelay = `${i * 0.3}s`;
                     });
                 }
             }, 1500); // 比祝福语稍早出现
@@ -371,7 +351,7 @@
             });
         };
 
-        // 每5秒添加一些糖霜
+        // 每2秒添加一些糖霜
         setInterval(addSprinkle, 2000);
     });
 </script>
