@@ -1,3 +1,435 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:998eb5e8403cfc2650aefb44a11ad4dfd1e0de5c361ad98fd0979d494097510d
-size 4268
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Album</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            border-bottom: none; /* 移除原来的下边框 */
+            text-align: left; /* 左对齐 */
+            background-color: #f8f9fa; /* 浅灰色底纹 */
+            border-radius: 4px; /* 圆角 */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* 轻微阴影 */
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 添加一个装饰性元素 */
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-color: #ff6b6b; /* 左侧装饰条颜色 */
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-item {
+            border-radius: 6px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            padding: 5px;
+            height: 200px; /* 固定高度 */
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .gallery-item img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* 保持图片比例，完整显示 */
+            display: block;
+        }
+
+        /* 图片放大查看样式 */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .lightbox-prev, .lightbox-next {
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            background-color: rgba(0,0,0,0.5);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 新增的音乐播放器样式 */
+        .music-player {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .music-player:hover {
+            transform: scale(1.1);
+            background-color: white;
+        }
+
+        .music-icon {
+            font-size: 24px;
+            color: #4a89dc;
+        }
+
+        .music-player.playing .music-icon::before {
+            content: "❚❚"; /* 暂停图标 */
+        }
+
+        .music-player:not(.playing) .music-icon::before {
+            content: "▶"; /* 播放图标 */
+        }
+
+        /* 隐藏的音频元素 */
+        #bg-music {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .gallery-item {
+                height: 150px;
+            }
+
+            .lightbox-prev, .lightbox-next {
+                font-size: 20px;
+                width: 40px;
+                height: 40px;
+            }
+
+            .music-player {
+                width: 40px;
+                height: 40px;
+                top: 15px;
+                right: 15px;
+            }
+
+            .music-icon {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 音乐播放按钮 -->
+    <div class="music-player" id="music-player">
+        <div class="music-icon"></div>
+    </div>
+
+    <!-- 隐藏的音频元素 -->
+    <audio id="bg-music" loop>
+        <source src="music/M500001WELIB3DMSRS.mp3" type="audio/mp3">
+        您的浏览器不支持音频元素
+    </audio>
+
+    <div class="container">
+        <!-- 第一个板块 -->
+        <div class="section">
+            <h2 class="section-title">武功山Kongfu</h2>
+            <div class="gallery" id="kongfu-gallery">
+                <!-- 添加更多图片 -->
+            </div>
+        </div>
+
+        <!-- 第二个板块 -->
+        <div class="section">
+            <h2 class="section-title">济州岛Jeju</h2>
+            <div class="gallery" id="jeju-gallery">
+                <!-- 添加更多图片 -->
+            </div>
+        </div>
+
+        <!-- 第三个板块 -->
+        <div class="section">
+            <h2 class="section-title">其他Else</h2>
+            <div class="gallery" id="else-gallery">
+                <!-- 添加更多图片 -->
+            </div>
+        </div>
+
+        <!-- 图片放大查看区域 -->
+        <div class="lightbox" id="lightbox">
+            <span class="lightbox-close" id="lightbox-close">&times;</span>
+            <div class="lightbox-content" id="lightbox-content">
+                <!-- 图片将在这里动态加载 -->
+            </div>
+            <div class="lightbox-nav">
+                <div class="lightbox-prev" id="lightbox-prev">&#10094;</div>
+                <div class="lightbox-next" id="lightbox-next">&#10095;</div>
+            </div>
+        </div>
+        <!-- 可以继续添加更多板块 -->
+    </div>
+
+    <script>
+        // 音乐播放器功能
+        const musicPlayer = document.getElementById('music-player');
+        const bgMusic = document.getElementById('bg-music');
+
+        // 初始化音乐播放状态
+        let isMusicPlaying = false;
+
+        // 点击音乐播放按钮
+        musicPlayer.addEventListener('click', function() {
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                musicPlayer.classList.remove('playing');
+            } else {
+                bgMusic.play()
+                    .then(() => {
+                        musicPlayer.classList.add('playing');
+                    })
+                    .catch(error => {
+                        console.error('自动播放被阻止:', error);
+                        // 用户可能需要先交互才能播放
+                        musicPlayer.textContent = '点击播放音乐';
+                    });
+            }
+            isMusicPlaying = !isMusicPlaying;
+        });
+
+        // 用户第一次交互后尝试自动播放
+        document.body.addEventListener('click', function initMusic() {
+            if (!isMusicPlaying) {
+                bgMusic.play()
+                    .then(() => {
+                        musicPlayer.classList.add('playing');
+                        isMusicPlaying = true;
+                    })
+                    .catch(error => {
+                        console.log('需要用户明确点击播放按钮');
+                    });
+            }
+            document.body.removeEventListener('click', initMusic);
+        }, { once: true });
+
+        // 存储所有图片元素以便导航
+        let allImages = [];
+        let currentImageIndex = 0;
+
+        // 添加武功山图片 (1-27.jpg)
+        const kongfuGallery = document.getElementById('kongfu-gallery');
+        for (let i = 1; i <= 27; i++) {
+            // 记录图片信息
+            const itemIndex = allImages.length;
+            allImages.push({
+                src: "album/kongfu/"+i+".jpg",
+                alt: "kongfu "+i
+            });
+
+            kongfuGallery.innerHTML += `
+                <div class="gallery-item" data-index="${itemIndex}">
+                    <img src="album/kongfu/${i}.jpg" alt="kongfu ${i}" loading="lazy">
+                </div>
+            `;
+        }
+
+        // 添加济州岛图片 (1-52.jpg)
+        const jejuGallery = document.getElementById('jeju-gallery');
+        for (let i = 1; i <= 51; i++) {
+            // 记录图片信息
+            const itemIndex = allImages.length;
+            allImages.push({
+                src: "album/jeju/"+i+".jpg",
+                alt: "jeju "+i
+            });
+
+            jejuGallery.innerHTML += `
+                <div class="gallery-item" data-index="${itemIndex}">
+                    <img src="album/jeju/${i}.jpg" alt="jeju ${i}" loading="lazy">
+                </div>
+            `;
+        }
+
+        // 添加其他图片 (1-5.jpg)
+        const elseGallery = document.getElementById('else-gallery');
+        for (let i = 1; i <= 5; i++) {
+            // 记录图片信息
+            const itemIndex = allImages.length;
+            allImages.push({
+                src: "album/else/"+i+".jpg",
+                alt: "else "+i
+            });
+
+            elseGallery.innerHTML += `
+                <div class="gallery-item" data-index="${itemIndex}">
+                    <img src="album/else/${i}.jpg" alt="else ${i}" loading="lazy">
+                </div>
+            `;
+        }
+
+        // 获取lightbox元素
+        const lightbox = document.getElementById('lightbox');
+        const lightboxContent = document.getElementById('lightbox-content');
+        const lightboxClose = document.getElementById('lightbox-close');
+        const lightboxPrev = document.getElementById('lightbox-prev');
+        const lightboxNext = document.getElementById('lightbox-next');
+
+        // 点击图片打开lightbox
+        document.addEventListener('click', function(e) {
+            // 修改这里：先检查是否点击了图片，然后找到最近的gallery-item
+            const imgElement = e.target.closest('.gallery-item img');
+            if (imgElement) {
+                const galleryItem = imgElement.closest('.gallery-item');
+                if (galleryItem) {
+                    const index = parseInt(galleryItem.getAttribute('data-index'));
+                    if (!isNaN(index)) {
+                        currentImageIndex = index;
+                        openLightbox();
+                    }
+                }
+            }
+        });
+
+        // 打开lightbox
+        function openLightbox() {
+            const image = allImages[currentImageIndex];
+            lightboxContent.innerHTML = `<img src="${image.src}" alt="${image.alt}">`;
+            lightbox.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // 防止背景滚动
+        }
+
+        // 关闭lightbox
+        function closeLightbox() {
+            lightbox.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // 导航到上一张图片
+        function prevImage() {
+            currentImageIndex = (currentImageIndex - 1 + allImages.length) % allImages.length;
+            openLightbox();
+        }
+
+        // 导航到下一张图片
+        function nextImage() {
+            currentImageIndex = (currentImageIndex + 1) % allImages.length;
+            openLightbox();
+        }
+
+        // 绑定事件
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightboxPrev.addEventListener('click', prevImage);
+        lightboxNext.addEventListener('click', nextImage);
+
+        // 按ESC键关闭lightbox
+        document.addEventListener('keydown', function(e) {
+            if (lightbox.style.display === 'flex') {
+                if (e.key === 'Escape') {
+                    closeLightbox();
+                } else if (e.key === 'ArrowLeft') {
+                    prevImage();
+                } else if (e.key === 'ArrowRight') {
+                    nextImage();
+                }
+            }
+        });
+
+        // 点击lightbox背景关闭
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+    </script>
+</body>
+</html>

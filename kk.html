@@ -1,3 +1,361 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:fb7c2a1bac951afa75564654c6d6cd9923d9cc333b955157d1804069d98b122f
-size 14607
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生日快乐祝福</title>
+    <link rel="stylesheet" href="style/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Pacifico&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- 音乐播放按钮 -->
+    <button class="play-pause" id="playPauseButton"></button>
+
+    <!-- 开始按钮 -->
+    <button class="start-button" id="startButton">准备好了，我们开始吧！</button>
+
+    <div class="containers">
+        <h1 class="birthday-title">Happy Birthday</h1>
+
+        <div class="message">
+            愿你一生温暖纯良，不舍爱与自由；<br>
+            愿你一生平安喜乐，皆能得偿所愿~
+        </div>
+
+        <!-- 点击许愿后弹出礼物标识 -->
+        <!-- 右侧礼物堆 -->
+        <div class="balloons-righttop">
+            <div class="balloon">✨</div>
+            <div class="balloon">🎂</div>
+            <div class="balloon">🎊</div>
+            <div class="balloon">🥳</div>
+        </div>
+
+
+        <!-- 照片框 -->
+        <div class="photo-frame">
+            <div class="photo-placeholder"></div>
+        </div>
+
+        <div class="birthday-person">Dear mmia</div>
+
+        <!-- 蛋糕容器 -->
+        <div class="cake-container">
+            <div class="cake">
+                <!-- 蛋糕底座 -->
+                <div class="cake-base"></div>
+
+                <!-- 第三层蛋糕 -->
+                <div class="layer-3">
+                    <div class="frosting"></div>
+                    <div class="sprinkles">
+                        <div class="sprinkle" style="top: 10px; left: 20px; background: #ff6b6b;"></div>
+                        <div class="sprinkle" style="top: 20px; left: 60px; background: #4ecdc4;"></div>
+                        <div class="sprinkle" style="top: 15px; left: 100px; background: #ffbe0b;"></div>
+                        <div class="sprinkle" style="top: 25px; left: 140px; background: #9d4edd;"></div>
+                        <div class="sprinkle" style="top: 10px; left: 180px; background: #45b7d1;"></div>
+                        <div class="sprinkle" style="top: 20px; left: 220px; background: #ff6b6b;"></div>
+                    </div>
+                </div>
+
+                <!-- 第二层蛋糕 -->
+                <div class="layer-2">
+                    <div class="frosting"></div>
+                    <div class="sprinkles">
+                        <div class="sprinkle" style="top: 10px; left: 30px; background: #ff6b6b;"></div>
+                        <div class="sprinkle" style="top: 20px; left: 70px; background: #4ecdc4;"></div>
+                        <div class="sprinkle" style="top: 15px; left: 110px; background: #ffbe0b;"></div>
+                        <div class="sprinkle" style="top: 25px; left: 150px; background: #9d4edd;"></div>
+                    </div>
+                </div>
+
+                <!-- 第一层蛋糕 -->
+                <div class="layer-1">
+                    <div class="frosting"></div>
+                    <div class="sprinkles">
+                        <div class="sprinkle" style="top: 10px; left: 40px; background: #ff6b6b;"></div>
+                        <div class="sprinkle" style="top: 20px; left: 90px; background: #4ecdc4;"></div>
+                    </div>
+                </div>
+
+                <!-- 蛋糕光泽效果 -->
+                <div class="cake-shine"></div>
+
+                <!-- 蜡烛 -->
+                <div class="candle">
+                    <div class="flame"></div>
+                </div>
+
+                <!-- 装饰 -->
+                <div class="decoration decoration-1"></div>
+                <div class="decoration decoration-2"></div>
+                <div class="decoration decoration-3"></div>
+            </div>
+        </div>
+
+        <div class="message blow-message">
+            许个愿吧，吹灭蜡烛，让美好的愿望成真！
+        </div>
+
+        <div class="footer">
+            🎇Made with sincereness & wishes🎈🎈
+        </div>
+    </div>
+
+
+    <div class="container">
+    <div class="one">
+      <h1 class="one">
+        <span data-node-name="greeting">Hey</span>
+        <span data-node-name="name">Lydia</span>
+      </h1>
+      <p class="two" data-node-name="greetingText">I really like your name btw!</p>
+    </div>
+    <div class="three">
+      <p data-node-name="text1">It's your birthday!!! :D</p>
+    </div>
+    <div class="four">
+      <div class="text-box">
+        <p class="hbd-chatbox" data-node-name="textInChatBox">Happy birthday to you!! Yeee! Many many happy blah...</p>
+        <p class="fake-btn" data-node-name="sendButtonLabel">Send</p>
+      </div>
+    </div>
+    <div class="five">
+      <p class="idea-1" data-node-name="text2">That's what I was going to do.</p>
+      <p class="idea-2" data-node-name="text3">But then I stopped.</p>
+      <p class="idea-3">
+        <span data-node-name="text4">I realised, I wanted to do something</span>
+        <strong data-node-name="text4Adjective">special</strong>.
+      </p>
+      <p class="idea-4" data-node-name="text5Entry">Because,</p>
+      <p class="idea-5">
+        <span data-node-name="text5Content">You are Special</span>
+        <span class="smiley" data-node-name="smiley">:)</span>
+      </p>
+      <p class="idea-6">
+        <span data-node-name="bigTextPart1">S</span>
+        <span data-node-name="bigTextPart2">O</span>
+      </p>
+    </div>
+    <div class="six">
+      <img src="img/jing.jpg" alt="" class="lydia-dp" data-node-name="imagePath">
+      <img src="img/hat.svg" alt="" class="hat">
+      <div class="wish">
+        <h3 class="wish-hbd" data-node-name="wishHeading">Happy Birthday!</h3>
+        <h5 data-node-name="wishText">May the js.prototypes always be with you! ;)</h5>
+      </div>
+    </div>
+    <div class="seven">
+      <div class="baloons">
+        <img src="img/ballon2.svg" alt="">
+        <img src="img/ballon1.svg" alt="">
+        <img src="img/ballon3.svg" alt="">
+        <img src="img/ballon1.svg" alt="">
+        <img src="img/ballon2.svg" alt="">
+        <img src="img/ballon3.svg" alt="">
+        <img src="img/ballon2.svg" alt="">
+        <img src="img/ballon3.svg" alt="">
+        <img src="img/ballon1.svg" alt="">
+        <img src="img/ballon2.svg" alt="">
+        <img src="img/ballon3.svg" alt="">
+        <img src="img/ballon2.svg" alt="">
+        <img src="img/ballon1.svg" alt="">
+        <img src="img/ballon3.svg" alt="">
+        <img src="img/ballon2.svg" alt="">
+        <img src="img/ballon3.svg" alt="">
+        <img src="img/ballon1.svg" alt="">
+        <img src="img/ballon2.svg" alt="">
+        <img src="img/ballon1.svg" alt="">
+        <img src="img/ballon3.svg" alt="">
+        <img src="img/ballon3.svg" alt="">
+        <img src="img/ballon1.svg" alt="">
+        <img src="img/ballon2.svg" alt="">
+        <img src="img/ballon3.svg" alt="">
+        <img src="img/ballon2.svg" alt="">
+        <img src="img/ballon1.svg" alt="">
+        <img src="img/ballon3.svg" alt="">
+        <img src="img/ballon2.svg" alt="">
+        <img src="img/ballon3.svg" alt="">
+        <img src="img/ballon1.svg" alt="">
+        <img src="img/ballon2.svg" alt="">
+        <img src="img/ballon1.svg" alt="">
+        <img src="img/ballon3.svg" alt="">
+      </div>
+    </div>
+    <div class="eight">
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="20" />
+      </svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="20" />
+      </svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="20" />
+      </svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="20" />
+      </svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="20" />
+      </svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="20" />
+      </svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="20" />
+      </svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="20" />
+      </svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="20" />
+      </svg>
+    </div>
+    <div class="nine">
+      <p data-node-name="outroText">Okay, now come back and tell me if you liked it.</p>
+      <p id="replay" data-node-name="replayText">Or click, if you want to watch it again.</p>
+      <p class="last-smile" data-node-name="outroSmiley">:)</p>
+    </div>
+    <canvas id="fireworksCanvas"></canvas>
+  </div>
+
+    <!-- 图片集链接 -->
+    <div class="github-link" style="display: none;">
+      <a href="Album.html" target="_blank">
+        <i class="fab fa-github"></i> 我建的一个在线图片集，都是些风景照
+      </a>
+    </div>
+</body>
+
+<script>
+    // 简约烟花效果
+    function createFirework(x, y) {
+        const colors = ['#ff6b6b', '#4ecdc4', '#ffbe0b', '#9d4edd'];
+        const particleCount = 12;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'firework';
+
+            // 随机选择颜色
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.background = color;
+
+            // 设置初始位置
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
+
+            // 随机方向
+            const angle = (i / particleCount) * Math.PI * 2;
+            const distance = 40 + Math.random() * 60;
+            const tx = Math.cos(angle) * distance;
+            const ty = Math.sin(angle) * distance;
+
+            // 使用CSS变量传递动画参数
+            particle.style.setProperty('--tx', `${tx}px`);
+            particle.style.setProperty('--ty', `${ty}px`);
+
+            // 应用动画
+            particle.style.animation = `firework-animation 1s ease-out forwards`;
+
+            document.body.appendChild(particle);
+
+            // 动画结束后移除元素
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    document.body.removeChild(particle);
+                }
+            }, 1000);
+        }
+    }
+
+    // 自动创建简约背景烟花
+    function createAutoFirework() {
+        const x = 50 + Math.random() * (window.innerWidth - 100);
+        const y = 50 + Math.random() * (window.innerHeight / 2 - 100);
+        createFirework(x, y);
+
+        // 随机时间后创建下一个烟花
+        setTimeout(createAutoFirework, 2000 + Math.random() * 2000);
+    }
+
+
+    // 页面加载完成后初始化
+    window.addEventListener('load', function() {
+        // 开始自动创建简约烟花
+        createAutoFirework();
+
+        // 点击蜡烛吹灭
+        const candle = document.querySelector('.candle');
+        const flame = document.querySelector('.flame');
+
+
+        candle.addEventListener('click', function() {
+            flame.style.animation = 'none';
+            flame.style.opacity = '0';
+
+            // 创建简约庆祝烟花
+            for (let i = 0; i < 7; i++) {
+                setTimeout(() => {
+                    createFirework(window.innerWidth / 2, window.innerHeight / 2);
+                    createFirework(window.innerWidth / 4, window.innerHeight / 4);
+                    createFirework(window.innerWidth * 3 / 4, window.innerHeight * 3 / 4);
+                    createFirework(window.innerWidth / 4, window.innerHeight * 3 / 4);
+                    createFirework(window.innerWidth * 3 / 4, window.innerHeight / 4);
+                }, i * 300);
+            }
+
+            // 显示祝福语
+            setTimeout(() => {
+                const wishMessage = document.querySelector('.blow-message');
+                wishMessage.textContent = '愿望已收到！祝你美梦成真！';
+                wishMessage.classList.add('wish-come-true'); // 添加闪烁样式
+            }, 2000);
+
+            // 显示礼物和气球
+            setTimeout(() => {
+                const balloons = document.querySelector('.balloons-righttop');
+
+                if (balloons) {
+                    balloons.classList.add('show-gifts');
+
+                    // 为每个礼物和气球添加随机延迟动画
+                    document.querySelectorAll('.balloon').forEach((balloon, i) => {
+                        balloon.style.animationDelay = `${i * 0.3}s`;
+                    });
+                }
+            }, 1500); // 比祝福语稍早出现
+        });
+
+        // 点击页面任意位置创建简约烟花
+        document.body.addEventListener('click', function(e) {
+            if (e.target.id !== 'music-toggle' && e.target.id !== 'start-button') {
+                createFirework(e.clientX, e.clientY);
+            }
+        });
+
+        // 添加一些糖霜
+        const addSprinkle = () => {
+            const layers = document.querySelectorAll('.layer-1, .layer-2, .layer-3');
+            layers.forEach(layer => {
+                const sprinkle = document.createElement('div');
+                sprinkle.className = 'sprinkle';
+                sprinkle.style.top = Math.random() * 30 + 'px';
+                sprinkle.style.left = Math.random() * 250 + 'px';
+
+                const colors = ['#ff6b6b', '#4ecdc4', '#ffbe0b', '#9d4edd', '#45b7d1'];
+                sprinkle.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+                layer.querySelector('.sprinkles').appendChild(sprinkle);
+            });
+        };
+
+        // 每2秒添加一些糖霜
+        setInterval(addSprinkle, 2000);
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
+<script type="application/javascript" src="script/main.js"></script>
+<script type="application/javascript" src="script/firework.js"></script>
+</html>

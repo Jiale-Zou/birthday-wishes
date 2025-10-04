@@ -1,3 +1,852 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:f5dbdaf0cf656e135f1e9fb15ce2d6b0f0a9c607fe6365bfd41fe471ee9592b1
-size 15873
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: #ffffff;
+    color: #333;
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+}
+
+.containers {
+    max-width: 800px;
+    z-index: 10;
+    position: relative;
+}
+
+/* 西式艺术字标题 - 纯色 */
+.birthday-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 7rem;
+    margin-bottom: 20px;
+    color: #FF69B4; /* 纯色 */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    letter-spacing: 2px;
+    animation: titleFloat 3s ease-in-out infinite;
+}
+
+@keyframes titleFloat {
+    0%, 100% { transform: translateY(0) rotate(0.5deg); }
+    50% { transform: translateY(-5px) rotate(-0.5deg); }
+}
+
+
+/* 开始按钮样式 */
+.start-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: linear-gradient(135deg, #FF69B4, #FF1493);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 50px;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(255, 105, 180, 0.4);
+    z-index: 100;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: pulse 2s infinite;
+}
+
+.start-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(255, 105, 180, 0.6);
+}
+
+.start-button:active {
+    transform: translateY(0);
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 8px 20px rgba(255, 105, 180, 0.4); }
+    50% { box-shadow: 0 8px 25px rgba(255, 105, 180, 0.7); }
+    100% { box-shadow: 0 8px 20px rgba(255, 105, 180, 0.4); }
+}
+
+/* 照片框样式 */
+.photo-frame {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    margin: 25px auto;
+    border: 4px solid #FFF0F5;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url('../img/head.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.photo-placeholder {
+    font-size: 4rem;
+    color: #ffd6e0;
+}
+
+/* 蛋糕容器 */
+.cake-container {
+    margin: 20px 0 10px 0;
+    position: relative;
+    height: 380px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    perspective: 1000px;
+}
+
+/* 蛋糕设计 - 立体层次感 */
+.cake {
+    position: relative;
+    width: 280px;
+    height: 200px;
+    transform-style: preserve-3d;
+    animation: float 6s ease-in-out infinite;
+}
+
+/* 蛋糕底座 */
+.cake-base {
+    position: absolute;
+    width: 300px;
+    height: 30px;
+    background: linear-gradient(to bottom, #f8d7da, #f5c6cb);
+    border-radius: 50%;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* 第三层蛋糕 */
+.layer-3 {
+    position: absolute;
+    width: 250px;
+    height: 60px;
+    background: linear-gradient(to bottom, #ffb7c5, #ff9daf);
+    border-radius: 20px 20px 10px 10px;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 第二层蛋糕 */
+.layer-2 {
+    position: absolute;
+    width: 200px;
+    height: 60px;
+    background: linear-gradient(to bottom, #ff9daf, #ff85a1);
+    border-radius: 18px 18px 8px 8px;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 第一层蛋糕 */
+.layer-1 {
+    position: absolute;
+    width: 150px;
+    height: 50px;
+    background: linear-gradient(to bottom, #ff85a1, #ff6b8b);
+    border-radius: 15px 15px 5px 5px;
+    bottom: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 奶油装饰 */
+.frosting {
+    position: absolute;
+    width: 100%;
+    height: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    bottom: -7px;
+    left: 0;
+}
+
+.frosting::before,
+.frosting::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    bottom: 5px;
+}
+
+.frosting::before {
+    left: 20%;
+}
+
+.frosting::after {
+    right: 20%;
+}
+
+/* 糖霜点缀 */
+.sprinkles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.sprinkle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+/* 蜡烛 */
+.candle {
+    position: absolute;
+    width: 10px;
+    height: 50px;
+    background: #ffcc00;
+    border-radius: 6px;
+    bottom: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 6;
+    box-shadow: 0 0 5px rgba(255, 204, 0, 0.6);
+    cursor: pointer; /* 鼠标变手型，提示可点击 */
+}
+
+.flame {
+    position: absolute;
+    width: 7px;
+    height: 15px;
+    background: #ffaa00;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 50% 50% 20% 20%;
+    box-shadow: 0 0 15px 5px #ff5500;
+    animation: flicker 0.6s infinite alternate;
+    pointer-events: none; /* 防止火焰拦截点击事件 */
+}
+
+/* 蛋糕装饰 */
+.decoration {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ff6b6b;
+    box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+}
+
+.decoration-1 {
+    top: 20px;
+    left: 30px;
+    animation: bounce 3s infinite ease-in-out;
+}
+
+.decoration-2 {
+    top: 40px;
+    right: 40px;
+    animation: bounce 3s infinite ease-in-out 0.5s;
+}
+
+.decoration-3 {
+    top: 60px;
+    left: 50px;
+    animation: bounce 3s infinite ease-in-out 1s;
+}
+
+/* 蛋糕光泽效果 */
+.cake-shine {
+    position: absolute;
+    width: 60px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    top: 20px;
+    left: 40px;
+    transform: rotate(45deg);
+}
+
+/* 简约烟花效果 */
+.firework {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0;
+}
+
+/* 简约烟花动画 */
+@keyframes firework-animation {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(0.5);
+    }
+    50% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(1.5);
+    }
+}
+
+/* 动画效果 */
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0.5deg); }
+    50% { transform: translateY(-10px) rotate(-0.5deg); }
+}
+
+@keyframes flicker {
+    0% { transform: translateX(-50%) scale(1); opacity: 1; }
+    100% { transform: translateX(-50%) scale(1.1); opacity: 0.9; }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.message {
+    font-size: 1.5rem;
+    line-height: 1.6;
+    margin: 15px 0;
+    color: #666;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.blow-message {
+    transform: translateY(-80px);
+    margin-bottom: -80px;
+}
+
+/* 祝福语闪烁动画 */
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* 祝福语样式 */
+.wish-come-true {
+    font-weight: bold;
+    color: #ff6b6b;       /* 红色更醒目 */
+    font-size: 25px;      /* 适当放大 */
+    animation: blink 1s infinite; /* 持续闪烁 */
+}
+
+.birthday-person {
+    font-size: 2.7rem;
+    color: #FA8072;
+    font-weight: bold;
+    margin: 15px 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.footer {
+    margin-top: 30px;
+    font-size: 1rem;
+    color: #999;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .birthday-title { font-size: 3.5rem; }
+    .birthday-person { font-size: 1.8rem; }
+    .message { font-size: 1.2rem; }
+    .photo-frame { width: 180px; height: 180px; }
+    .cake { transform: scale(0.8); }
+    .music-toggle { width: 50px; height: 50px; font-size: 1.5rem; }
+    .start-button {
+        bottom: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        font-size: 1rem;
+    }
+}
+
+
+/* 礼物堆样式 */
+.balloons-righttop {
+  position: fixed;
+  left: 20%;
+  top: 40%;
+  display: flex;
+  flex-wrap: wrap;
+  width: 180px;
+  opacity: 0;
+  transform: translateY(-100px);
+  transition: all 1s ease-out;
+  z-index: 1000;
+}
+
+.balloon {
+    position: relative;
+    font-size: 50px;
+    margin: 5px;
+    animation: float 4s ease-in-out infinite;
+}
+
+/* 音乐符样式 */
+.music-lefttop {
+  position: fixed;
+  left: 5%;
+  top: 20%;
+  display: flex;
+  flex-wrap: wrap;
+  width: 180px;
+  opacity: 0;
+  transform: translateY(-100px);
+  transition: all 1s ease-out;
+  z-index: 1000;
+}
+
+.music {
+    position: relative;
+    font-size: 50px;
+    margin: 5px;
+    animation: float 4s ease-in-out infinite;
+}
+
+
+/* 浮动动画 */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+/* 点击后显示的样式 */
+.show-gifts {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* 确保画布不拦截点击事件 */
+  z-index: -9999; /* 将画布置于顶层 */
+}
+
+.container {
+  height: 100vh;
+  width: 100vh;
+  margin: 0 auto;
+  text-align: center;
+  visibility: hidden;
+  position: relative;
+  overflow: hidden;
+}
+
+.container div.six {
+  top: 15vh;
+  z-index: 1;
+}
+
+.container div.seven,
+.container div.eight {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+}
+
+.container > div {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 20vh;
+}
+
+.one {
+  font-size: 4.5rem;
+}
+
+.one > img {
+  vertical-align: middle;
+  margin-bottom: 10px;
+  max-width: 100%;
+  height: auto;
+}
+
+.two {
+  font-size: 1.2rem;
+  font-weight: lighter;
+}
+
+.three {
+  font-size: 3rem;
+}
+
+.four .text-box {
+  width: 600px;
+  margin: 0 auto;
+  border: 3px solid #aaa;
+  border-radius: 5px;
+  padding: 10px;
+  position: relative;
+}
+
+.text-box p {
+  margin: 0;
+  text-align: left;
+}
+
+.text-box span {
+  visibility: hidden;
+}
+
+.text-box .fake-btn {
+  position: absolute;
+  right: 5px;
+  bottom: 2px;
+  color: #fff;
+  background-color: #03C160;
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+.five p {
+  font-size: 2rem;
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.idea-3 strong {
+  padding: 3px 5px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.five .idea-5 {
+  font-size: 4rem;
+}
+
+.idea-5 span,
+.idea-6 span,
+.wish-hbd span {
+  display: inline-block;
+}
+
+.idea-6 span {
+  font-size: 15rem;
+}
+
+.six {
+  position: relative;
+}
+
+.six img {
+    display: inline-block;
+    max-width: 100%;
+    height: auto;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.six .hat {
+  position: absolute;
+  width: 80px;
+  top: -70px;
+  left: 49%;
+  /* 等比例扩大图片到2倍 */
+  transform: scale(1.1);
+}
+
+.baloons img {
+  display: inline-block;
+  position: absolute;
+}
+
+.baloons img:nth-child(even) {
+  left: -10%;
+}
+
+.baloons img:nth-child(odd) {
+  right: -10%;
+}
+
+.baloons img:nth-child(3n + 0) {
+  left: 30%;
+}
+
+.eight svg {
+  width: 25px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  z-index: -1;
+}
+
+.eight svg:nth-child(1) {
+  top: 7vh;
+  left: 5vw;
+  fill: #bd6ecf;
+}
+
+.eight svg:nth-child(2) {
+  top: 23vh;
+  left: 35vw;
+  fill: #7dd175;
+}
+
+.eight svg:nth-child(3) {
+  top: 33vh;
+  left: 23vw;
+  fill: #349d8b;
+}
+
+.eight svg:nth-child(4) {
+  top: 43vh;
+  left: 57vw;
+  fill: #347a9d;
+}
+
+.eight svg:nth-child(5) {
+  top: 68vh;
+  left: 7vw;
+  fill: #c66053;
+}
+
+.eight svg:nth-child(6) {
+  top: 42vh;
+  left: 77vw;
+  fill: #bfaa40;
+}
+
+.eight svg:nth-child(7) {
+  top: 68vh;
+  left: 83vw;
+  fill: #e3bae8;
+}
+
+.eight svg:nth-child(8) {
+  top: 86vh;
+  left: 37vw;
+  fill: #8762cb;
+}
+
+.eight svg:nth-child(9) {
+  top: 94vh;
+  left: 87vw;
+  fill: #9a90da;
+}
+
+.wish-hbd {
+  font-size: 3em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.wish h5 {
+  font-weight: lighter;
+  font-size: 2rem;
+  margin: 10px 0 0;
+}
+
+.nine p {
+  font-size: 2rem;
+  font-weight: lighter;
+}
+
+#replay {
+  z-index: 3;
+  cursor: pointer;
+}
+
+/* Media Queries */
+@media screen and (max-height: 1000px) {
+  .six .hat {
+    left: 49%;
+  }
+}
+
+@media screen and (max-height: 800px) {
+  .six .hat {
+    left: 46%;
+  }
+}
+
+@media screen and (max-height: 700px) {
+  .six .hat {
+    left: 44%;
+  }
+}
+
+@media screen and (max-height: 850px) and (max-width: 450px) {
+  .six .hat {
+    left: 42%;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .container {
+    width: 90%;
+  }
+
+  .four .text-box {
+    width: 90%;
+  }
+
+  .text-box .fake-btn {
+    right: 5px;
+    bottom: -48px;
+  }
+
+  .idea-5 span {
+    display: block;
+  }
+
+  .idea-6 span {
+    font-size: 10rem;
+  }
+
+  .six .hat {
+    width: 50px;
+    top: -20px;
+  }
+
+  .wish-hbd {
+    font-size: 2.2em;
+  }
+
+  .wish h5 {
+    font-size: 1.4rem;
+  }
+
+  .nine p {
+    font-size: 1.5rem;
+    font-weight: lighter;
+  }
+}
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.play-pause {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 107, 107, 0.9);
+    background-image: url('../img/play.svg');
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    border: none;
+    color: white;
+    font-size: 1.8rem;
+    transition: all 0.3s ease;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.play-pause.playing {
+    transform: scale(1.1);
+    background: rgba(255, 107, 107, 1);
+    background-image: url('../img/pause.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* 图片集链接 */
+.github-link {
+    position: fixed;
+    bottom: 160px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    padding: 15px;
+    opacity: 0;
+    transition: all 0.5s ease;
+    z-index: 100;
+    /* 新增关键属性 */
+    display: flex;
+    justify-content: center;
+    pointer-events: none; /* 初始不可点击 */
+    overflow: hidden; /* 限制发光容器 */
+}
+
+.github-link.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0); /* 保持水平居中，取消垂直偏移 */
+    pointer-events: auto; /* 显示后可点击 */
+}
+
+.github-link a {
+    color: #0366d6;
+    text-decoration: none;
+    font-size: 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 30px;
+    background: rgba(3, 102, 214, 0.1);
+    transition: all 0.3s;
+}
+
+.github-link a:hover {
+    background: rgba(3, 102, 214, 0.2);
+    transform: scale(1.05);
+}
+
+/* 适配移动端 */
+@media (max-width: 768px) {
+    .github-link {
+    padding: 10px;
+    bottom: 10px;
+    }
+    .github-link a {
+    font-size: 1rem;
+    padding: 10px 20px;
+    max-width: 95%; /* 小屏幕更宽限制 */
+    }
+}
