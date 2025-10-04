@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Album</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-item {
+            border-radius: 6px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            padding: 5px;
+            height: 200px; /* 固定高度 */
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .gallery-item img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* 保持图片比例，完整显示 */
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .gallery-item {
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 第一个板块 -->
+        <div class="section">
+            <h2 class="section-title">武功山kongfu</h2>
+            <div class="gallery" id="kongfu-gallery">
+                <!-- 添加更多图片 -->
+            </div>
+        </div>
+
+        <!-- 第二个板块 -->
+        <div class="section">
+            <h2 class="section-title">济州岛Jeju</h2>
+            <div class="gallery" id="jeju-gallery">
+                <!-- 添加更多图片 -->
+            </div>
+        </div>
+
+        <!-- 第三个板块 -->
+        <div class="section">
+            <h2 class="section-title">Else</h2>
+            <div class="gallery" id="else-gallery">
+                <!-- 添加更多图片 -->
+            </div>
+        </div>
+
+        <!-- 可以继续添加更多板块 -->
+    </div>
+
+    <script>
+        // 添加武功山图片 (1-27.jpg)
+        // 使用loading="lazy"实现图片懒加载，提高页面性能
+        const kongfuGallery = document.getElementById('kongfu-gallery');
+        for (let i = 1; i <= 27; i++) {
+           kongfuGallery.innerHTML += `
+                <div class="gallery-item">
+                    <img src="album/kongfu/${i}.jpg" alt="kongfu ${i}" loading="lazy">
+                </div>
+            `;
+        }
+
+
+        // 添加济州岛图片 (1-52.jpg)
+        const jejuGallery = document.getElementById('jeju-gallery');
+        for (let i = 1; i <= 51; i++) {
+            jejuGallery.innerHTML += `
+                <div class="gallery-item">
+                    <img src="album/jeju/${i}.jpg" alt="jeju ${i}" loading="lazy">
+                </div>
+            `;
+        }
+
+        // 添加其他图片 (1-5.jpg)
+        const elseGallery = document.getElementById('else-gallery');
+        for (let i = 1; i <= 5; i++) {
+            elseGallery.innerHTML += `
+                <div class="gallery-item">
+                    <img src="album/else/${i}.jpg" alt="else ${i}" loading="lazy">
+                </div>
+            `;
+        }
+
+    </script>
+</body>
+</html>
