@@ -23,6 +23,31 @@
             愿你一生平安喜乐，皆能得偿所愿~
         </div>
 
+        <!-- 点击许愿后弹出礼物标识 -->
+        <!-- 左侧礼物堆 -->
+        <div class="gifts-leftbottom">
+            <div class="gift">🎁</div>
+            <div class="gift">💝</div>
+            <div class="gift">🎉</div>
+            <div class="gift">🎈</div>
+        </div>
+
+        <!-- 右侧气球堆 -->
+        <div class="balloons-righttop">
+            <div class="balloon">✨</div>
+            <div class="balloon">🎂</div>
+            <div class="balloon">🎊</div>
+            <div class="balloon">🥳</div>
+        </div>
+
+        <!-- 左侧气球堆 -->
+        <div class="music-lefttop">
+            <div class="music">🎵</div>
+            <div class="music">🎶</div>
+            <div class="music">🎶</div>
+            <div class="music">🎵</div>
+        </div>
+
         <!-- 照片框 -->
         <div class="photo-frame">
             <div class="photo-placeholder"></div>
@@ -84,12 +109,12 @@
             </div>
         </div>
 
-        <div class="message">
+        <div class="message blow-message">
             许个愿吧，吹灭蜡烛，让美好的愿望成真！
         </div>
 
         <div class="footer">
-            🎇Made with sincereness & blessing🎈🎈
+            🎇Made with sincereness & wishes🎈🎈
         </div>
     </div>
 
@@ -273,21 +298,54 @@
         const candle = document.querySelector('.candle');
         const flame = document.querySelector('.flame');
 
+
         candle.addEventListener('click', function() {
             flame.style.animation = 'none';
             flame.style.opacity = '0';
 
             // 创建简约庆祝烟花
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 7; i++) {
                 setTimeout(() => {
                     createFirework(window.innerWidth / 2, window.innerHeight / 2);
+                    createFirework(window.innerWidth / 4, window.innerHeight / 4);
+                    createFirework(window.innerWidth * 3 / 4, window.innerHeight * 3 / 4);
+                    createFirework(window.innerWidth / 4, window.innerHeight * 3 / 4);
+                    createFirework(window.innerWidth * 3 / 4, window.innerHeight / 4);
                 }, i * 300);
             }
 
             // 显示祝福语
             setTimeout(() => {
-                document.querySelector('.message:last-child').textContent = '愿望已收到！祝你美梦成真！';
-            }, 1000);
+                const wishMessage = document.querySelector('.blow-message');
+                wishMessage.textContent = '愿望已收到！祝你美梦成真！';
+                wishMessage.classList.add('wish-come-true'); // 添加闪烁样式
+            }, 2000);
+
+            // 显示礼物和气球
+            setTimeout(() => {
+                const gifts = document.querySelector('.gifts-leftbottom');
+                const balloons = document.querySelector('.balloons-righttop');
+                const music = document.querySelector('.music-lefttop');
+
+                if (gifts && balloons) {
+                    gifts.classList.add('show-gifts');
+                    balloons.classList.add('show-gifts');
+                    music.classList.add('show-gifts');
+
+                    // 为每个礼物和气球添加随机延迟动画
+                    document.querySelectorAll('.gift').forEach((gift, i) => {
+                        gift.style.animationDelay = `${i * 0.2}s`;
+                    });
+
+                    document.querySelectorAll('.balloon').forEach((balloon, i) => {
+                        balloon.style.animationDelay = `${i * 0.3}s`;
+                    });
+
+                    document.querySelectorAll('.music').forEach((music, i) => {
+                        music.style.animationDelay = `${i * 0.3}s`;
+                    });
+                }
+            }, 1500); // 比祝福语稍早出现
         });
 
         // 点击页面任意位置创建简约烟花
