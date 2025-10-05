@@ -555,7 +555,7 @@
 
                     <div class="demo-arrow">
                         <div class="arrow-icon">→</div>
-                        <div class="arrow-text">动漫、轻微</div>
+                        <div class="arrow-text">动漫、略微</div>
                     </div>
 
                     <div class="demo-image-container">
@@ -946,7 +946,7 @@
             // 模拟调用大模型API的函数
             async function callDiffusionAPI(imageUrl, style, deviation, customPrompt) {
                 try {
-                    const response = await fetch('http://localhost:5000/picture-diffusion', {
+                    const response = await fetch('https://jialezou.pythonanywhere.com/picture-diffusion', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
