@@ -27,6 +27,8 @@ const fetchData = () => {
             audioUrl = data[customData]
             audio = new Audio(audioUrl)
             audio.preload = "auto"
+          } else if (customData === "localhostDomain") {
+
           } else {
             document.querySelector(`[data-node-name*="${customData}"]`).innerText = data[customData]
           }
