@@ -179,21 +179,21 @@ body {
 }
 
 /* 为最大回撤添加特殊颜色 */
-.metric-card:nth-child(7) .metric-value {
-    color: #e74c3c; /* 红色表示风险 */
-}
-
-.metric-card:nth-child(7) {
-    border-left-color: #e74c3c; /* 左侧装饰条也使用红色 */
-}
-
-/* 为胜率添加特殊颜色 */
 .metric-card:nth-child(8) .metric-value {
-    color: #27ae60; /* 绿色表示正收益 */
+    color: #27ae60; /* 绿色表示风险 */
 }
 
 .metric-card:nth-child(8) {
     border-left-color: #27ae60; /* 左侧装饰条也使用绿色 */
+}
+
+/* 为胜率添加特殊颜色 */
+.metric-card:nth-child(7) .metric-value {
+    color: #e74c3c; /* 红色表示正收益 */
+}
+
+.metric-card:nth-child(7) {
+    border-left-color: #e74c3c; /* 左侧装饰条也使用红色 */
 }
 
 /* 响应式调整 */
@@ -230,11 +230,11 @@ body {
 }
 
 .positive {
-    color: #27ae60;
+    color: #e74c3c;
 }
 
 .negative {
-    color: #e74c3c;
+    color: #27ae60;
 }
 
 /* 信号指示器样式 */
@@ -248,13 +248,13 @@ body {
     top: -3px;
 }
 
-.signal-buy {
+.signal-sell {
     background-color: rgba(39, 174, 96, 0.1);
     color: #27ae60;
     border: 1px solid rgba(39, 174, 96, 0.3);
 }
 
-.signal-sell {
+.signal-buy {
     background-color: rgba(231, 76, 60, 0.1);
     color: #e74c3c;
     border: 1px solid rgba(231, 76, 60, 0.3);

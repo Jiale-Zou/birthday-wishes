@@ -485,17 +485,17 @@ function updateBasicMetrics(metrics) {
         <div class="etf-code">${metrics.tomorrow_best_etf.code}</div>
     `;
 
-    // 更新最大回撤指标 (第7个卡片)
-    updateMetricCard(7,
+    // 更新最大回撤指标 (第8个卡片)
+    updateMetricCard(8,
         -Math.abs(metrics.max_back_step), // 确保为负值
         `${metrics.max_back_step.value.toFixed(4)}%`,
         `${metrics.max_back_step.date_range.max_back_step_begin} To ${metrics.max_back_step.date_range.max_back_step_end}`
     );
 
-    // 更新胜率指标 (第8个卡片)
-    updateMetricCard(8,
+    // 更新胜率指标 (第7个卡片)
+    updateMetricCard(7,
         metrics.winning_rate,
-        `${(metrics.winning_rate * 100).toFixed(2)}%`,
+        `${(metrics.winning_rate * 100).toFixed(4)}%`,
         '今年'
     );
 }
@@ -511,11 +511,11 @@ function updateMetricCard(index, value, displayValue, period) {
     valueElement.textContent = displayValue;
 
     // 特殊处理胜率（不需要正负号）
-    if (index === 8) {
+    if (index === 7) {
         valueElement.className = 'metric-value positive';
     }
     // 特殊处理最大回撤（总是显示为负值）
-    else if (index === 7) {
+    else if (index === 8) {
         valueElement.className = 'metric-value negative';
     }
     // 其他指标保持原有逻辑
@@ -618,7 +618,7 @@ function renderReturnsChart(returnsData) {
                     },
                     ticks: {
                         callback: function(value) {
-                            return value.toFixed(2) + '%';
+                            return value.toFixed(0) + '%';
                         }
                     }
                 }
