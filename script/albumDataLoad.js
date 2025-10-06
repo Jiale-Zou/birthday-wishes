@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initPhotoAlbum();
     initDiffusion();
     loadStrategyPerformance();
+    initTicketGrab();
 });
 
 // Tab切换功能
@@ -40,6 +41,7 @@ function initTabs() {
             if (appState.currentTab === 'stocks') {
                 loadStrategyPerformance();
             }
+            // 可以添加抢票页面的初始化逻辑
         });
 
         // 默认激活首页
@@ -54,7 +56,12 @@ function initTabs() {
 function initMusicPlayer() {
     const musicPlayer = document.getElementById('music-player');
     const bgMusic = document.getElementById('bg-music');
+    const musicSelector = document.getElementById('music-selector');
 
+    // 当前播放的音乐
+    let currentMusic = bgMusic.src;
+
+    // 点击播放/暂停
     musicPlayer.addEventListener('click', function() {
         if (appState.isMusicPlaying) {
             bgMusic.pause();
@@ -70,6 +77,43 @@ function initMusicPlayer() {
                 });
         }
         appState.isMusicPlaying = !appState.isMusicPlaying;
+    });
+
+    // 切换音乐（修改部分）
+    musicSelector.addEventListener('change', function() {
+        const newSource = this.value;
+        if (newSource !== currentMusic) {
+            // 保存当前播放状态
+            const wasPlaying = appState.isMusicPlaying;
+
+            // 切换音乐源并重置播放位置
+            bgMusic.volume = 0.5; // 初始音量
+            bgMusic.pause();
+            bgMusic.src = newSource;
+            bgMusic.currentTime = 0; // 关键修改：强制从头开始
+            currentMusic = newSource;
+
+            // 恢复播放状态(淡入播放的模式)
+            if (wasPlaying) {
+                bgMusic.volume = 0;
+                bgMusic.play()
+                    .then(() => {
+                        musicPlayer.classList.add('playing');
+                    })
+                    .catch(error => {
+                        console.error('音乐切换后自动播放失败:', error);
+                        musicPlayer.classList.remove('playing');
+                        appState.isMusicPlaying = false;
+                    });
+                const fadeIn = setInterval(() => {
+                    if (bgMusic.volume < 0.5) {
+                        bgMusic.volume += 0.05;
+                    } else {
+                        clearInterval(fadeIn);
+                    }
+                }, 100);
+            }
+        }
     });
 
     // 用户第一次交互后尝试自动播放
@@ -444,8 +488,8 @@ function updateBasicMetrics(metrics) {
     // 更新最大回撤指标 (第7个卡片)
     updateMetricCard(7,
         -Math.abs(metrics.max_back_step), // 确保为负值
-        `${metrics.max_back_step.toFixed(4)}%`,
-        '今年'
+        `${metrics.max_back_step.value.toFixed(4)}%`,
+        `${metrics.max_back_step.date_range.max_back_step_begin} To ${metrics.max_back_step.date_range.max_back_step_end}`
     );
 
     // 更新胜率指标 (第8个卡片)
@@ -589,4 +633,105 @@ function formatDate(dateStr) {
     const date = new Date(dateStr);
     return isNaN(date.getTime()) ? dateStr :
         `${date.getMonth() + 1}月${date.getDate()}日`;
+}
+
+
+// 抢票功能初始化
+function initTicketGrab() {
+    const grabBtn = document.getElementById('grab-btn');
+    const timeSlotCheckboxes = document.querySelectorAll('input[name="time-slot"]');
+    const ticketSpinner = document.getElementById('ticket-spinner');
+    const ticketModal = document.getElementById('ticket-modal');
+    const modalClose = document.getElementById('modal-close');
+    const resultTitle = document.getElementById('result-title');
+    const resultMessage = document.getElementById('result-message');
+    const resultDetails = document.getElementById('result-details');
+
+    // 抢票按钮点击事件
+    grabBtn.addEventListener('click', async function() {
+        // 获取所有选中的时间段（数组形式）
+        const selectedSlots = Array.from(timeSlotCheckboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value);
+
+        if (selectedSlots.length === 0) {
+            alert('请至少选择一个场次');
+            return;
+        }
+
+        grabBtn.disabled = true;
+        ticketSpinner.style.display = 'block';
+
+        try {
+            // 改为一次性发送所有时间段到后端
+            const result = await grabTickets(selectedSlots); // 批量发要抢的时间段
+            showResult(result.success, result.message, result.details);
+        } catch (error) {
+            showResult(false, '抢票失败', error.message);
+        } finally {
+            grabBtn.disabled = false;
+            ticketSpinner.style.display = 'none';
+        }
+    });
+
+    // 关闭弹窗事件
+    modalClose.addEventListener('click', function() {
+        ticketModal.style.display = 'none';
+    });
+
+    // 点击弹窗外部关闭
+    ticketModal.addEventListener('click', function(e) {
+        if (e.target === ticketModal) {
+            ticketModal.style.display = 'none';
+        }
+    });
+
+    // 抢票函数
+    async function grabTickets(timeSlots) {
+        try {
+            const Domain = await localhostDomain;
+            const response = await fetch(`${Domain}/grab-tickets`, { // 注意接口URL改为复数形式
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    timeSlots, // 数组格式：["09:30-10:30", "10:30-11:30"]
+                    date: getTomorrowDate()
+                })
+            });
+
+            if (!response.ok) throw new Error('网络响应不正常');
+            return await response.json();
+        } catch (error) {
+            console.error('批量抢票失败:', error);
+            throw error;
+        }
+    }
+
+    // 显示多个结果
+    function showResult(success, message, details) {
+        resultTitle.textContent = success ? '抢票结果' : '抢票失败';
+        resultTitle.style.color = success ? '#27ae60' : '#e74c3c';
+
+        // 如果details是数组，展示每个时间段的结果
+        if (Array.isArray(details)) {
+            resultMessage.innerHTML = details.map(d => `
+                <div class="result-item ${d.success ? 'success' : 'fail'}">
+                    ${d.timeSlot}: ${d.success ? '✅' : '❌'} ${d.court || d.reason ||  ''}
+                </div>
+            `).join('');
+        } else {
+            resultMessage.textContent = message;
+        }
+
+        ticketModal.style.display = 'flex';
+    }
+
+    // 获取明天日期的辅助函数
+    function getTomorrowDate() {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+
+        return `${tomorrow.getFullYear()}年${tomorrow.getMonth() + 1}月${tomorrow.getDate()}日`;
+    }
 }
