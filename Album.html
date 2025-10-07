@@ -10,23 +10,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-
-    <!-- 音乐播放器部分 -->
-    <div class="music-controls">
-        <!-- 音乐选择下拉菜单 -->
-        <select id="music-selector" class="music-selector">
-            <option value="music/The Platform.mp3">The Platform</option>
-            <option value="music/grateful days.mp3">Grateful Days</option>
-            <option value="music/About you.mp3">About you</option>
-            <option value="music/stay together.mp3">Stay Together</option>
-            <option value="music/i have seen.mp3">I have seen</option>
-        </select>
-
-        <!-- 音乐播放按钮 -->
-        <div class="music-player" id="music-player">
-            <div class="music-icon"></div>
+    <!-- 账户输入区域 -->
+    <div class="account-bar">
+        <div class="account-section">
+            <span class="account-label">账号：</span>
+            <div class="account-input-container">
+                <input type="password" id="account-input" placeholder="请输入您的账号">
+                <span class="toggle-visibility">
+                    <i class="eye-icon fas fa-eye-slash">👁</i>
+                </span>
+            </div>
         </div>
+
+        <!-- 音乐播放器部分 -->
+        <div class="music-controls">
+            <!-- 音乐选择下拉菜单 -->
+            <select id="music-selector" class="music-selector">
+                <option value="music/The Platform.mp3">The Platform</option>
+                <option value="music/grateful days.mp3">Grateful Days</option>
+                <option value="music/About you.mp3">About you</option>
+                <option value="music/stay together.mp3">Stay Together</option>
+                <option value="music/i have seen.mp3">I have seen</option>
+            </select>
+
+            <!-- 音乐播放按钮 -->
+            <div class="music-player" id="music-player">
+                <div class="music-icon"></div>
+            </div>
+        </div>
+
     </div>
+
 
     <!-- 隐藏的音频元素 -->
     <audio id="bg-music" loop>

@@ -7,7 +7,9 @@ const appState = {
     isMusicPlaying: false,
     allImages: [],
     currentImageIndex: 0,
-    currentTab: 'home'
+    currentTab: 'home',
+    account: '',
+    showAccount: false,
 };
 
 // 主初始化函数
@@ -18,7 +20,66 @@ document.addEventListener('DOMContentLoaded', function() {
     initDiffusion();
     loadStrategyPerformance();
     initTicketGrab();
+    initAccountInput()
 });
+
+// 账户输入框初始化函数
+function initAccountInput() {
+    const accountInput = document.getElementById('account-input');
+    const toggleBtn = document.querySelector('.toggle-visibility');
+    const eyeIcon = document.querySelector('.eye-icon');
+
+    // 从本地存储恢复账户信息
+    const savedAccount = localStorage.getItem('userAccount');
+    if (savedAccount) {
+        accountInput.value = savedAccount;
+        appState.account = savedAccount;
+    }
+
+    // 监听输入变化并保存
+    accountInput.addEventListener('input', function() {
+        appState.account = this.value;
+        localStorage.setItem('userAccount', this.value);
+
+        // 如果是密码模式，显示星号
+        if (accountInput.type === 'password') {
+            this.value = '*'.repeat(appState.account.length);
+        }
+    });
+
+    // 切换显示/隐藏
+    toggleBtn.addEventListener('click', function() {
+        appState.showAccount = !appState.showAccount;
+
+        if (appState.showAccount) {
+            // 显示真实账号
+            accountInput.type = 'text';
+            accountInput.value = appState.account;
+            eyeIcon.classList.remove('fa-eye-slash');
+            eyeIcon.classList.add('fa-eye');
+            eyeIcon.style.color = '#4a89dc';
+        } else {
+            // 显示星号
+            accountInput.type = 'password';
+            accountInput.value = '*'.repeat(appState.account.length);
+            eyeIcon.classList.remove('fa-eye');
+            eyeIcon.classList.add('fa-eye-slash');
+            eyeIcon.style.color = '#7f8c8d';
+        }
+    });
+
+    // 防止点击按钮时输入框失去焦点
+    toggleBtn.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+    });
+
+    // 确保输入框不会被Tab切换重置
+    document.addEventListener('visibilitychange', function() {
+        if (accountInput.value !== appState.account) {
+            accountInput.value = appState.account;
+        }
+    });
+}
 
 // Tab切换功能
 function initTabs() {
@@ -245,6 +306,26 @@ function initLightbox() {
     });
 }
 
+
+// 获取账户信息
+function getAccountInfo() {
+    const accountInput = document.getElementById('account-input');
+    return accountInput.value.trim(); // 返回去除前后空格的账户名
+}
+
+// 获取客户端IP地址（异步）
+async function getClientIP() {
+    try {
+        // 使用第三方API获取IP（注意：生产环境建议通过后端获取）
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        return data.ip || 'unknown';
+    } catch (error) {
+        console.error('获取IP地址失败:', error);
+        return 'unknown';
+    }
+}
+
 // Diffusion功能
 function initDiffusion() {
     const sourceImageInput = document.getElementById('source-image-input');
@@ -255,6 +336,7 @@ function initDiffusion() {
     const placeholderText = document.getElementById('placeholder-text');
     const loadingSpinner = document.getElementById('loading-spinner');
     const sourceImageSelect = document.getElementById('source-image-select');
+
 
     // 填充源图片选择框
     function populateSourceImages() {
@@ -311,11 +393,18 @@ function initDiffusion() {
 
         try {
             const Domain = await localhostDomain;
+            const account = getAccountInfo();
+            const clientIP = await getClientIP();
             const response = await fetch(`${Domain}/picture-diffusion`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Client-IP': clientIP,
+                    'X-User-Agent': navigator.userAgent
+                },
                 body: JSON.stringify({
                     imgUrl: selectedImage?.src || '',
+                    account,
                     style,
                     deviation,
                     customPrompt
@@ -325,7 +414,13 @@ function initDiffusion() {
             if (!response.ok) throw new Error('网络响应不正常');
 
             const data = await response.json();
-            if (!data.outUrl) throw new Error('API返回数据格式不正确');
+            if (!data.success) {
+                console.error('生成图片失败:', data.message);
+                placeholderText.textContent = `图片生成失败: ${data.message}`;
+                placeholderText.style.display = 'block';
+            }else if (!data.outUrl) {
+                throw new Error('API返回数据格式不正确')
+            };
 
             generatedImage.src = data.outUrl;
             generatedImage.style.display = 'block';
@@ -378,12 +473,20 @@ function initDiffusion() {
 async function loadStrategyPerformance() {
     try {
         const container = document.getElementById('stock-chart-container');
+        const Domain = await localhostDomain;
+        const account = getAccountInfo();
+        const clientIP = await getClientIP();
 
         // 显示加载状态
         container.innerHTML = '<div class="loading-spinner"></div>';
 
-        const Domain = await localhostDomain;
-        const response = await fetch(`${Domain}/quant`);
+        const response = await fetch(`${Domain}/quant`, {
+            headers: {
+                'X-Client-IP': clientIP,
+                'X-User-Agent': navigator.userAgent,
+                'X-Account': account // GET方法不能有body，说以放headers里
+            }
+        });
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -391,12 +494,13 @@ async function loadStrategyPerformance() {
 
         const data = await response.json();
 
-        if (data.status !== 'success') {
-            throw new Error(data.message || 'Unknown error from server');
+        if (!data.success) {
+            showChartError(`加载失败: ${data.message}` || 'Unknown server error.');
+            return;
         }
 
         // 更新基本指标
-        updateBasicMetrics(data.data.basic_metrics);
+        updateBasicMetrics(data.output.data.basic_metrics);
 
         // 动态加载Chart.js
         if (typeof Chart === 'undefined') {
@@ -410,7 +514,7 @@ async function loadStrategyPerformance() {
         }
 
         // 绘制图表
-        renderReturnsChart(data.data.cumulative_returns);
+        renderReturnsChart(data.output.data.cumulative_returns);
 
     } catch (error) {
         console.error('加载策略表现失败:', error);
@@ -665,7 +769,11 @@ function initTicketGrab() {
         try {
             // 改为一次性发送所有时间段到后端
             const result = await grabTickets(selectedSlots); // 批量发要抢的时间段
-            showResult(result.success, result.message, result.details);
+            if (!result.success) {
+                showResult(result.success, result.message, result.message);
+            } else {
+                showResult(result.output.success, result.output.message, result.output.details);
+            }
         } catch (error) {
             showResult(false, '抢票失败', error.message);
         } finally {
@@ -690,16 +798,25 @@ function initTicketGrab() {
     async function grabTickets(timeSlots) {
         try {
             const Domain = await localhostDomain;
+            const account = getAccountInfo();
+            const clientIP = await getClientIP();
             const response = await fetch(`${Domain}/grab-tickets`, { // 注意接口URL改为复数形式
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Client-IP': clientIP,
+                    'X-User-Agent': navigator.userAgent
+                },
                 body: JSON.stringify({
                     timeSlots, // 数组格式：["09:30-10:30", "10:30-11:30"]
-                    date: getTomorrowDate()
+                    date: getTomorrowDate(),
+                    account
                 })
             });
 
-            if (!response.ok) throw new Error('网络响应不正常');
+            if (!response.ok) {
+                throw new Error('Internet error')
+            }
             return await response.json();
         } catch (error) {
             console.error('批量抢票失败:', error);
