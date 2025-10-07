@@ -1,3 +1,9 @@
+
+function sha256Hash(message, salt = '') {
+  const saltedMessage = message + salt;
+  return CryptoJS.SHA256(saltedMessage).toString(CryptoJS.enc.Hex);
+}
+
 const localhostDomain = fetch('customize.json')
     .then(response => response.json())
     .then(data => data.localhostDomain)
@@ -404,7 +410,7 @@ function initDiffusion() {
                 },
                 body: JSON.stringify({
                     imgUrl: selectedImage?.src || '',
-                    account,
+                    'account': sha256Hash(account),
                     style,
                     deviation,
                     customPrompt
@@ -484,7 +490,7 @@ async function loadStrategyPerformance() {
             headers: {
                 'X-Client-IP': clientIP,
                 'X-User-Agent': navigator.userAgent,
-                'X-Account': account // GET方法不能有body，说以放headers里
+                'X-Account': sha256Hash(account) // GET方法不能有body，说以放headers里
             }
         });
 
@@ -810,7 +816,7 @@ function initTicketGrab() {
                 body: JSON.stringify({
                     timeSlots, // 数组格式：["09:30-10:30", "10:30-11:30"]
                     date: getTomorrowDate(),
-                    account
+                    'account': sha256Hash(account)
                 })
             });
 
