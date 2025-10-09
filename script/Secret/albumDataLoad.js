@@ -326,7 +326,10 @@ const IP_CACHE_KEY = 'client_ip_cache';
 async function getClientIP() {
     // 检查session缓存
     const cachedIP = sessionStorage.getItem(IP_CACHE_KEY);
-    if (cachedIP) return cachedIP;
+    // 验证缓存值是否为有效IP
+    if (cachedIP && isValidIP(cachedIP)) {
+        return cachedIP;
+    }
 
     let ip = 'unknown';
 
@@ -352,9 +355,35 @@ async function getClientIP() {
         ip = await fetchPublicIP();
     }
 
-    // 缓存结果（有效期5分钟）
-    sessionStorage.setItem(IP_CACHE_KEY, ip);
+    // 新增：验证IP格式后再缓存
+    if (isValidIP(ip)) {
+        sessionStorage.setItem(IP_CACHE_KEY, ip);
+    } else {
+        sessionStorage.removeItem(IP_CACHE_KEY); // 清除无效缓存
+    }
     return ip;
+}
+
+// 新增：IP格式验证函数
+function isValidIP(ip) {
+    if (!ip || ip === 'unknown') return false;
+    if (ip.includes('Promise') || ip.includes('object')) return false; // 排除Promise对象
+    if (ip.includes('[') || ip.includes(']')) return false; // 排除数组表示
+
+    // 基本IP格式验证（IPv4或IPv6）
+    const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
+    const ipv6Regex = /^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/;
+
+    return ipv4Regex.test(ip) || ipv6Regex.test(ip) || ip === 'unknown';
+}
+
+// 清理无效的IP缓存
+function clearInvalidIPCache() {
+    const cachedIP = sessionStorage.getItem(IP_CACHE_KEY);
+    if (cachedIP && !isValidIP(cachedIP)) {
+        console.log('清理无效IP缓存:', cachedIP);
+        sessionStorage.removeItem(IP_CACHE_KEY);
+    }
 }
 
 // 获取Domain

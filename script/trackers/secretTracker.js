@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         env: window.__ENV__ || 'production'  // 自动区分环境
     });
 
+    // 页面加载时清理无效缓存
+    clearInvalidIPCache();
     await sendPageViewTrack();
     initTracking();
 });
