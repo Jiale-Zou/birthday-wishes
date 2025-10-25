@@ -58,7 +58,7 @@ function clearInvalidIPCache() {
 
 
 
-// 带缓存和错误重试的版本：获取IP地址
+// 带缓存和错误重试的版本：获取IP地址(但由于：异步操作未完成时进行缓存，或错误地缓存了Promise对象)
 const IP_CACHE_KEY = 'client_ip_cache';
 async function getClientIP() {
     // 检查session缓存
@@ -92,7 +92,7 @@ async function getClientIP() {
         ip = await fetchPublicIP();
     }
 
-    // 新增：验证IP格式后再缓存
+    // 验证IP格式后再缓存
     if (isValidIP(ip)) {
         sessionStorage.setItem(IP_CACHE_KEY, ip);
     } else {
