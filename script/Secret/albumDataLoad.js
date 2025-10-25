@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadStrategyPerformance();
     initTicketGrab();
     initAccountInput();
+    initAIChat();
 });
 
 
@@ -953,3 +954,206 @@ function initTicketGrab() {
     }
 }
 
+// AI对话功能初始化
+function initAIChat() {
+    const chatMessages = document.getElementById('chat-messages');
+    const chatInput = document.getElementById('chat-input');
+    const sendButton = document.getElementById('send-button');
+    const clearChatBtn = document.getElementById('clear-chat');
+    const copyChatBtn = document.getElementById('copy-chat');
+    const chatSpinner = document.getElementById('chat-spinner');
+
+    // 加载历史记录，兼容新数据结构
+    let chatHistory = [];
+    try {
+        const saved = localStorage.getItem('aiChatHistory');
+        if (saved) {
+            chatHistory = JSON.parse(saved);
+            // 验证数据格式，确保包含必要的字段
+            chatHistory = chatHistory.filter(msg =>
+                msg && typeof msg === 'object' &&
+                msg.usr_content && msg.ass_content
+            );
+        }
+    } catch (error) {
+        console.error('加载聊天历史失败:', error);
+        chatHistory = [];
+    }
+
+    // 初始化界面
+    initializeChatInterface();
+
+    // 发送消息
+    sendButton.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    // 清空对话
+    clearChatBtn.addEventListener('click', function() {
+        if (confirm('确定要清空对话记录吗？')) {
+            chatHistory = [];
+            saveChatHistory();
+            initializeChatInterface();
+        }
+    });
+
+    // 复制对话
+    copyChatBtn.addEventListener('click', copyChatHistory);
+
+    function initializeChatInterface() {
+        chatMessages.innerHTML = '';
+
+        if (chatHistory.length === 0) {
+            // 显示欢迎消息
+            addMessageToChat('bot', '您好！我是您的AI助手，收录了150万张食谱，有什么可以帮您的吗？');
+        } else {
+            // 加载历史消息 - 使用新的数据结构
+            chatHistory.forEach(msg => {
+                // 先显示用户消息
+                addMessageToChat('user', msg.usr_content);
+                // 再显示AI回复
+                addMessageToChat('bot', msg.ass_content);
+            });
+        }
+        scrollToBottom();
+    }
+
+    async function sendMessage() {
+        const message = chatInput.value.trim();
+        if (!message) return;
+
+        // 禁用输入和按钮
+        chatInput.disabled = true;
+        sendButton.disabled = true;
+
+        // 添加用户消息到界面
+        addMessageToChat('user', message);
+        chatInput.value = '';
+
+        // 显示加载状态
+        chatSpinner.style.display = 'block';
+        scrollToBottom();
+
+        try {
+            // 调用AI对话API
+            const response = await callAIChatAPI(message);
+
+            // 添加AI回复到界面
+            addMessageToChat('bot', response);
+
+            // 保存到历史记录 - 使用新的数据结构
+            chatHistory.push({
+                usr_content: message,      // 用户发送的内容
+                ass_content: response,     // AI回复的内容
+                timestamp: new Date().toISOString()
+            });
+
+            // 限制历史记录长度（最近30轮对话）
+            if (chatHistory.length > 30) {
+                chatHistory = chatHistory.slice(-30);
+            }
+
+            saveChatHistory();
+
+        } catch (error) {
+            console.error('AI对话失败:', error);
+            addMessageToChat('bot', `抱歉，我暂时无法响应。${error.message}`);
+        } finally {
+            // 恢复输入和按钮
+            chatInput.disabled = false;
+            sendButton.disabled = false;
+            chatSpinner.style.display = 'none';
+            chatInput.focus();
+        }
+    }
+
+    async function callAIChatAPI(message) {
+        const account = getAccountInfo();
+        const clientIP = await getClientIP();
+        const Domain = await localhostDomain();
+
+        // 构建发送给后端的history格式
+
+        const response = await fetch(`${Domain}/ai-chat`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Client-IP': clientIP,
+                'X-User-Agent': navigator.userAgent
+            },
+            body: JSON.stringify({
+                message: message,
+                'account': sha256Hash(account),
+                history: chatHistory.slice(-5) // 发送最近5轮用户消息作为上下文
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (!data.success) {
+            throw new Error(data.message || 'AI服务返回错误');
+        }
+
+        return data.output || '抱歉，我没有理解您的问题。';
+    }
+
+    function addMessageToChat(role, content) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${role}-message`;
+
+        const timestamp = new Date().toLocaleTimeString('zh-CN', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        messageDiv.innerHTML = `
+            <div class="message-avatar">${role === 'user' ? 'M' : 'AI'}</div>
+            <div class="message-content">
+                <p>${content.replace(/\n/g, '<br>')}</p>
+                <div class="message-time">${timestamp}</div>
+            </div>
+        `;
+
+        chatMessages.appendChild(messageDiv);
+        scrollToBottom();
+    }
+
+    function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function saveChatHistory() {
+        try {
+            localStorage.setItem('aiChatHistory', JSON.stringify(chatHistory));
+        } catch (error) {
+            console.error('保存聊天历史失败:', error);
+        }
+    }
+
+    function copyChatHistory() {
+        const chatText = Array.from(chatMessages.querySelectorAll('.message'))
+            .map(msg => {
+                const role = msg.classList.contains('user-message') ? 'M' : 'AI';
+                const content = msg.querySelector('.message-content p').textContent;
+                return `${role}: ${content}`;
+            })
+            .join('\n\n');
+
+        navigator.clipboard.writeText(chatText).then(() => {
+            alert('对话已复制到剪贴板！');
+        }).catch(() => {
+            alert('复制失败，请手动选择文本复制。');
+        });
+    }
+
+    // 自动聚焦到输入框
+    chatInput.focus();
+}
