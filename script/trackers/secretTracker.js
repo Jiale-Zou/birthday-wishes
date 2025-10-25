@@ -2,7 +2,6 @@
 import Tracker from './Tracker.js'
 
 let tracker ;
-let proxyUrl = 'https://cors-anywhere.herokuapp.com/';
 
 document.addEventListener('DOMContentLoaded', async function() {
     tracker =  new Tracker({
@@ -27,7 +26,7 @@ async function sendPageViewTrack() {
         // 确保endpoint正确
         if (tracker.endpoint.length <= 20) {
             const Domain = await localhostDomain();
-            tracker.endpoint = proxyUrl + `${Domain}/tracking`;
+            tracker.endpoint = `${Domain}/tracking`;
         }
 
         await tracker.track({
@@ -83,7 +82,7 @@ const trackClickHandler = async (e) => {
         const payload = buildTrackPayload(el);
         if ( tracker.endpoint.length <= 20 ) {
             const Domain = await localhostDomain();
-            tracker.endpoint = proxyUrl + `${Domain}/tracking`;
+            tracker.endpoint = `${Domain}/tracking`;
         }
         tracker.track(payload, ClientIP);
     } catch (error) {

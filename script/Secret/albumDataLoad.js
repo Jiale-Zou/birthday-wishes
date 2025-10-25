@@ -4,7 +4,6 @@ function sha256Hash(message, salt = '') {
   return CryptoJS.SHA256(saltedMessage).toString(CryptoJS.enc.Hex);
 }
 
-let proxyUrl = 'https://cors-anywhere.herokuapp.com/';
 
 // 全局状态管理
 const appState = {
@@ -338,7 +337,7 @@ async function getClientIP() {
     try {
         // 先尝试后端API
         const Domain = await localhostDomain();
-        const response = await fetch(proxyUrl + `${Domain}/client-ip`, {
+        const response = await fetch(`${Domain}/client-ip`, {
             headers: {
                 'Cache-Control': 'no-cache',
                 'X-Requested-With': 'XMLHttpRequest'
@@ -497,7 +496,7 @@ function initDiffusion() {
             const account = getAccountInfo();
             const clientIP = await getClientIP();
             const Domain = await localhostDomain();
-            const response = await fetch(proxyUrl + `${Domain}/picture-diffusion`, {
+            const response = await fetch(`${Domain}/picture-diffusion`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -582,7 +581,7 @@ async function loadStrategyPerformance() {
         // 显示加载状态
         container.innerHTML = '<div class="loading-spinner"></div>';
 
-        const response = await fetch(proxyUrl + `${Domain}/quant`, {
+        const response = await fetch(`${Domain}/quant`, {
             headers: {
                 'X-Client-IP': clientIP,
                 'X-User-Agent': navigator.userAgent,
@@ -902,7 +901,7 @@ function initTicketGrab() {
             const account = getAccountInfo();
             const clientIP = await getClientIP();
             const Domain = await localhostDomain();
-            const response = await fetch(proxyUrl + `${Domain}/grab-tickets`, { // 注意接口URL改为复数形式
+            const response = await fetch(`${Domain}/grab-tickets`, { // 注意接口URL改为复数形式
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1079,7 +1078,7 @@ function initAIChat() {
 
         // 构建发送给后端的history格式
 
-        const response = await fetch(proxyUrl + `${Domain}/ai-chat`, {
+        const response = await fetch(`${Domain}/ai-chat`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
