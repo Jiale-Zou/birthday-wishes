@@ -2,6 +2,7 @@
 import Tracker from './Tracker.js'
 
 let tracker;
+let proxyUrl = 'https://cors-anywhere.herokuapp.com/';
 
 document.addEventListener('DOMContentLoaded', async function() {
     tracker =  new Tracker({
@@ -24,7 +25,7 @@ async function sendPageViewTrack() {
         // 确保endpoint正确
         if (tracker.endpoint.length <= 20) {
             const Domain = await localhostDomain();
-            tracker.endpoint = `${Domain}/tracking`;
+            tracker.endpoint = proxyUrl + `${Domain}/tracking`;
         }
 
         await tracker.track({
@@ -73,7 +74,7 @@ async function getClientIP() {
     try {
         // 先尝试后端API
         const Domain = await localhostDomain();
-        const response = await fetch(`${Domain}/client-ip`, {
+        const response = await fetch(proxyUrl + `${Domain}/client-ip`, {
             headers: {
                 'Cache-Control': 'no-cache',
                 'X-Requested-With': 'XMLHttpRequest'
