@@ -210,7 +210,7 @@ function initPhotoAlbum() {
         for (let i = 1; i <= gallery.count; i++) {
             const itemIndex = appState.allImages.length;
             const alt = `${gallery.prefix}${i}`;
-            const src = `/static/album/${gallery.prefix}/${i}.jpg`;
+            const src = `../static/album/${gallery.prefix}/${i}.jpg`;
 
             appState.allImages.push({ src, alt });
 
