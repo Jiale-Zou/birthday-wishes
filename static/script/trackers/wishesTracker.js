@@ -16,6 +16,46 @@ document.addEventListener('DOMContentLoaded', async function() {
     await sendPageViewTrack();
 });
 
+// 获取Domain
+async function localhostDomain() {
+    let domain = fetch('/static/customize.json')
+                .then(response => response.json())
+                .then(data => data.localhostDomain);
+    return domain;
+}
+async function proxyDomain() {
+    let proxy = fetch('/static/customize.json')
+                .then(response => response.json())
+                .then(data => data.proxyDomain);
+    return proxy;
+}
+
+async function getBothDomains() {
+    try {
+        // 关键步骤：使用 Promise.all 并行执行两个异步函数
+        const [localhost, proxy] = await Promise.all([
+            localhostDomain(),
+            proxyDomain()
+        ]);
+
+        // 此时，localhost 变量包含 localhostDomain 的返回值
+        // proxy 变量包含 proxyDomain 的返回值
+        console.log('Localhost Domain:', localhost);
+        console.log('Proxy Domain:', proxy);
+
+        // 返回一个对象，方便在函数外部使用
+        return {
+            localhostDomain: localhost,
+            proxyDomain: encodeURIComponent(proxy)
+        };
+
+    } catch (error) {
+        // 统一错误处理：如果任何一个异步函数失败，都会在这里捕获
+        console.error('Failed to fetch one or more domains:', error);
+        throw error; // 可以选择重新抛出错误，或者返回默认值
+    }
+}
+
 // 发送页面浏览埋点
 async function sendPageViewTrack() {
     try {
@@ -114,21 +154,6 @@ function isValidIP(ip) {
     return ipv4Regex.test(ip) || ipv6Regex.test(ip) || ip === 'unknown';
 }
 
-// 获取Domain
-const Domain_CACHE_KEY = 'domain_cache';
-async function localhostDomain() {
-    // 检查session缓存
-    const cachedDomain = sessionStorage.getItem(Domain_CACHE_KEY);
-    if (cachedDomain) return cachedDomain;
-
-    let domain = fetch('/static/customize.json')
-                .then(response => response.json())
-                .then(data => data.localhostDomain);
-
-    // 缓存结果（有效期5分钟）
-    sessionStorage.setItem(IP_CACHE_KEY, domain);
-    return domain;
-}
 
 // 使用公共API获取客户端IP地址（异步）
 async function fetchPublicIP() {
