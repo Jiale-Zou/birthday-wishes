@@ -389,13 +389,13 @@ function clearInvalidIPCache() {
 
 // 获取Domain
 async function localhostDomain() {
-    let domain = fetch('/static/customize.json')
+    let domain = fetch('../static/customize.json')
                 .then(response => response.json())
                 .then(data => data.localhostDomain);
     return domain;
 }
 async function proxyDomain() {
-    let proxy = fetch('/static/customize.json')
+    let proxy = fetch('../static/customize.json')
                 .then(response => response.json())
                 .then(data => data.proxyDomain);
     return proxy;
