@@ -862,7 +862,7 @@ canvas {
 }
 
 .github-link a {
-    color: #0366d6;
+    color: #FF69B4;
     text-decoration: none;
     font-size: 1.2rem;
     display: inline-flex;
@@ -870,12 +870,12 @@ canvas {
     gap: 8px;
     padding: 10px 20px;
     border-radius: 30px;
-    background: rgba(3, 102, 214, 0.1);
+    background: rgba(255, 182, 193, 0.5);
     transition: all 0.3s;
 }
 
 .github-link a:hover {
-    background: rgba(3, 102, 214, 0.2);
+    background: rgba(255, 182, 193, 0.2);
     transform: scale(1.05);
 }
 
